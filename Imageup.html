@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Message Input</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0 10px; /* Add padding to prevent edges on smaller screens */
+        }
+
+        .message-input {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            padding: 10px;
+            background-color: #fff;
+            width: 100%;
+            max-width: 600px;
+            overflow-x: auto; /* Allow horizontal scrolling if needed */
+        }
+
+        .avatar-container {
+            display: flex;
+            flex-wrap: nowrap; /* Prevent wrapping to keep avatars in a single row */
+            margin-right: 10px;
+            overflow-x: auto; /* Allow horizontal scrolling for avatars */
+        }
+
+        .avatar-card {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 5px;
+        }
+
+        .avatar-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .upload-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #007bff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .upload-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .message-input {
+                padding: 8px; /* Reduced padding for smaller screens */
+            }
+
+            .avatar-card {
+                width: 30px; /* Smaller avatars */
+                height: 30px;
+            }
+
+            .upload-btn {
+                width: 35px; /* Smaller upload button */
+                height: 35px;
+            }
+
+            .delete-btn {
+                width: 15px; /* Smaller delete button */
+                height: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="message-input">
+        <div class="avatar-container" id="avatarContainer"></div>
+        <input type="text" placeholder="Type your message..." id="messageInput" style="flex-grow: 1;">
+        <label for="imageUpload" class="upload-btn">
+            <img src="upload-icon.png" alt="Upload" />
+        </label>
+        <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+    </div>
+
+    <script>
+        document.getElementById('imageUpload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatarContainer = document.getElementById('avatarContainer');
+
+                    // Create avatar card
+                    const avatarCard = document.createElement('div');
+                    avatarCard.classList.add('avatar-card');
+                    
+                    // Create image element
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+
+                    // Create delete button
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.classList.add('delete-btn');
+                    deleteBtn.innerText = 'x';
+                    deleteBtn.onclick = function() {
+                        avatarContainer.removeChild(avatarCard);
+                    };
+
+                    // Append elements
+                    avatarCard.appendChild(img);
+                    avatarCard.appendChild(deleteBtn);
+                    avatarContainer.appendChild(avatarCard);
+
+                    // Clear the file input
+                    event.target.value = '';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
